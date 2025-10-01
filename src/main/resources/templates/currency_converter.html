@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Converter</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #0f3b1d;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+        }
+
+        .converter-container {
+          background: #fff;
+          border-radius: 16px;
+          padding: 30px;
+          width: 350px;
+          text-align: center;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .converter-container h1 {
+          font-size: 20px;
+          margin-bottom: 15px;
+          color: #333;
+        }
+
+        label {
+          display: block;
+          text-align: left;
+          margin: 10px 0 5px;
+          font-weight: bold;
+          font-size: 14px;
+        }
+
+        select, input {
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          font-size: 14px;
+        }
+
+        button {
+          background-color: #2ac769;
+          color: white;
+          border: none;
+          padding: 12px;
+          width: 100%;
+          font-size: 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+
+        button:hover {
+          background-color: #23a856;
+        }
+
+        .result-box {
+          margin-top: 20px;
+          padding: 15px;
+          border-radius: 12px;
+          background: #f6fdf8;
+          color: #222;
+          font-size: 16px;
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter-container">
+    <h1>Currency Converter</h1>
+
+    <form th:action="@{/convert}" th:object="${currencyConversionRequest}" method="post">
+
+        <label for="fromCurrency">From</label>
+        <select id="fromCurrency" th:field="*{fromCurrency}" required>
+            <option value="" disabled>Select source currency</option>
+            <option th:each="c : ${currencies}"
+                    th:value="${c.short_code}"
+                    th:text="${c.name}">
+            </option>
+        </select>
+
+        <label for="toCurrency">To</label>
+        <select id="toCurrency" th:field="*{toCurrency}" required>
+            <option value="" disabled>Select target currency</option>
+            <option th:each="c : ${currencies}"
+                    th:value="${c.short_code}"
+                    th:text="${c.name}">
+            </option>
+        </select>
+
+
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" th:field="*{amount}" step="1" min="1" required>
+
+        <button type="submit">Convert</button>
+    </form>
+
+    <div th:if="${conversionResult != null}" class="result-box">
+        <p th:text="'Converted ' + ${conversionResult.amount} + ' ' + ${conversionResult.from}
+                    + ' = ' + ${conversionResult.value} + ' ' + ${conversionResult.to}"></p>
+    </div>
+</div>
+
+</body>
+</html>
